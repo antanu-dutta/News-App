@@ -122,41 +122,43 @@ export function SimpleNavbar() {
   }, []);
 
   return (
-    <Navbar className="mx-auto max-w-screen-xl px-6 py-3">
-      <div className="flex items-center justify-between text-blue-gray-900">
-        <Link to="/">
-          <Typography
-            as="a"
-            href="#"
-            variant="h6"
-            className="mr-4 cursor-pointer py-1.5"
-          >
-            NEWS
-          </Typography>
-        </Link>
+    <div className="fixed w-full z-[1000] ">
+      <Navbar className="mx-auto max-w-screen-xl px-6 py-3 shadow-2xl">
+        <div className="flex items-center justify-between text-blue-gray-900">
+          <Link to="/">
+            <Typography
+              as="a"
+              href="#"
+              variant="h6"
+              className="mr-4 cursor-pointer py-1.5"
+            >
+              NEWS
+            </Typography>
+          </Link>
 
-        <div className="hidden lg:block">
-          <NavList setOpenNav={setOpenNav} openNav={openNav} />
+          <div className="hidden lg:block">
+            <NavList setOpenNav={setOpenNav} openNav={openNav} />
+          </div>
+          <div className="hidden lg:block">
+            <AlgoliaSearch />
+          </div>
+          <IconButton
+            variant="text"
+            className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
+            ripple={false}
+            onClick={() => setOpenNav(!openNav)}
+          >
+            {openNav ? (
+              <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+            ) : (
+              <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+            )}
+          </IconButton>
         </div>
-        <div className="hidden lg:block">
-          <AlgoliaSearch />
-        </div>
-        <IconButton
-          variant="text"
-          className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
-          ripple={false}
-          onClick={() => setOpenNav(!openNav)}
-        >
-          {openNav ? (
-            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
-          ) : (
-            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
-          )}
-        </IconButton>
-      </div>
-      <Collapse open={openNav}>
-        <NavList />
-      </Collapse>
-    </Navbar>
+        <Collapse open={openNav}>
+          <NavList />
+        </Collapse>
+      </Navbar>
+    </div>
   );
 }

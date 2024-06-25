@@ -6,14 +6,14 @@ import News from "./components/News";
 function App() {
   useEffect(() => {
     document.body.style.background = "#373A40";
+    return () => (document.body.style.background = "#373A40");
   }, []);
 
   return (
     <BrowserRouter>
       <div className="py-3">
         <SimpleNavbar />
-        <h1 className="text-center my-10 text-4xl text-white">Latest News</h1>
-
+        
         <Routes>
           <Route
             key="general"

@@ -37,10 +37,14 @@ function News({ category }) {
   }, [newsDetails.page, category]);
   return (
     <div>
-      <div className="max-w-screen-xl mx-auto p-3">
+      <div className="max-w-screen-xl mx-auto p-3 py-[100px]">
         <div className="flex justify-center items-center my-5">
           {newsDetails.isLoading && <DefaultSpinner />}
         </div>
+        {newsDetails.articles.length > 1 && (
+          <h1 className="text-center my-10 text-4xl text-white">Latest News</h1>
+        )}
+
         {newsDetails.errorMessage && (
           <div className="text-center text-red-600 text-4xl">
             {`404 : ${newsDetails.errorMessage}`}
