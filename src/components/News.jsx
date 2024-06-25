@@ -5,7 +5,7 @@ import { DefaultSpinner } from "./Spiner";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Spinner } from "@material-tailwind/react";
 
-function News({ category }) {
+function News({ category, mainCategory }) {
   const [newsDetails, setNewsDetails] = useState({
     isLoading: true,
     totalNews: 0,
@@ -16,11 +16,11 @@ function News({ category }) {
 
   const fetchMoreData = async () => {
     try {
-      const url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=8936d237be2e4a8fb24a5e85fff941fa&pageSize=12`;
+      const url = `https://newsapi.org/v2/${mainCategory}?country=in&category=${category}&apiKey=8936d237be2e4a8fb24a5e85fff941fa&pageSize=12`;
       const newsData = await axios(url);
       setNewsDetails((prevState) => ({
         ...prevState,
-        articles: [...prevState.articles, ...newsData.data.articles],
+        articles: [...newsData.data.articles, ...prevState.articles],
         // articles: newsData.data.articles,
         totalNews: newsData.data.totalResults,
         isLoading: false,
@@ -61,14 +61,20 @@ function News({ category }) {
         )}
 
         {newsDetails.articles.length !== 0 && (
-          <div className="text-white text-3xl">{category.toUpperCase()}</div>
+          <div className="text-white text-3xl my-7">
+            {category.toUpperCase()}
+          </div>
         )}
 
         <InfiniteScroll
           dataLength={newsDetails.articles.length}
           next={fetchMoreData}
           hasMore={newsDetails.articles.length < newsDetails.totalNews}
-          loader={<h4>Loading...</h4>}
+          loader={
+            <div className="flex justify-center items-center my-5">
+              <DefaultSpinner />
+            </div>
+          }
         >
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
             {newsDetails.articles.map((news, index) => (
@@ -96,3 +102,7 @@ function News({ category }) {
 }
 
 export default News;
+
+News.defaultProps = {
+  mainCategory: "top-headlines",
+};
