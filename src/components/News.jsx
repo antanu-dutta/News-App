@@ -2,47 +2,52 @@ import React, { useEffect, useState } from "react";
 import { BlogCard } from "./Card";
 import axios from "axios";
 import { DefaultSpinner } from "./Spiner";
-import { SimplePagination } from "./Pagination";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Spinner } from "@material-tailwind/react";
 
 function News({ category }) {
   const [newsDetails, setNewsDetails] = useState({
     isLoading: true,
-    totalNews: "",
+    totalNews: 0,
     articles: [],
     page: 1,
     errorMessage: "",
   });
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=f33d81ce668f4f83bdad253daba27f1a&page=${newsDetails.page}&pageSize=12`;
-        const newsData = await axios(url);
-        setNewsDetails({
-          ...newsDetails,
-          articles: newsData.data.articles,
+
+  const fetchMoreData = async () => {
+    try {
+      const url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=8936d237be2e4a8fb24a5e85fff941fa&pageSize=12`;
+      const newsData = await axios(url);
+      setNewsDetails((prevState) => ({
+        ...prevState,
+        articles: [...prevState.articles, ...newsData.data.articles],
+        // articles: newsData.data.articles,
+        totalNews: newsData.data.totalResults,
+        isLoading: false,
+        page: prevState.page + 1,
+      }));
+    } catch (err) {
+      if (err.response && err.response.status === 429) {
+        setNewsDetails((prevState) => ({
+          ...prevState,
           isLoading: false,
-          totalNews: newsData.data.totalResults,
-        });
-      } catch (err) {
-        if (err.response.status === 429) {
-          setNewsDetails({
-            ...newsDetails,
-            isLoading: false,
-            errorMessage: "You have requested too many times",
-          });
-        }
+          errorMessage: "You have requested too many times",
+        }));
       }
-    };
-    fetchData();
-  }, [newsDetails.page, category]);
+    }
+  };
+
+  useEffect(() => {
+    fetchMoreData();
+  }, [category]);
+
   return (
     <div>
       <div className="max-w-screen-xl mx-auto p-3 py-[100px]">
-        <div className="flex justify-center items-center my-5">
-          {newsDetails.isLoading && <DefaultSpinner />}
-        </div>
-        {newsDetails.articles.length > 1 && (
-          <h1 className="text-center my-10 text-4xl text-white">Latest News</h1>
+        {newsDetails.isLoading && (
+          <div className="flex justify-center items-center my-5">
+            <DefaultSpinner />
+          </div>
         )}
 
         {newsDetails.errorMessage && (
@@ -50,18 +55,23 @@ function News({ category }) {
             {`404 : ${newsDetails.errorMessage}`}
           </div>
         )}
-        {newsDetails.articles.length != 0 && (
-          <div className="text-white text-3xl">{category.toUpperCase()}</div>
-        )}
-        {newsDetails.articles.length != 0 && (
-          <div className="py-10 flex justify-center">
-            <SimplePagination newsData={{ newsDetails, setNewsDetails }} />
-          </div>
+
+        {newsDetails.articles.length > 0 && (
+          <h1 className="text-center my-10 text-4xl text-white">Latest News</h1>
         )}
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3  gap-8">
-          {newsDetails.articles.map((news, index) => {
-            return (
+        {newsDetails.articles.length !== 0 && (
+          <div className="text-white text-3xl">{category.toUpperCase()}</div>
+        )}
+
+        <InfiniteScroll
+          dataLength={newsDetails.articles.length}
+          next={fetchMoreData}
+          hasMore={newsDetails.articles.length < newsDetails.totalNews}
+          loader={<h4>Loading...</h4>}
+        >
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {newsDetails.articles.map((news, index) => (
               <BlogCard
                 key={index}
                 image={news.urlToImage ? news.urlToImage : ""}
@@ -77,9 +87,9 @@ function News({ category }) {
                 date={news.publishedAt}
                 url={news.url}
               />
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        </InfiniteScroll>
       </div>
     </div>
   );

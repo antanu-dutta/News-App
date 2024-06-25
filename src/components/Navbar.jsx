@@ -10,99 +10,34 @@ import { AlgoliaSearch } from "./Search";
 import { Link } from "react-router-dom";
 
 function NavList({ setOpenNav, openNav }) {
+  const categories = [
+    { path: "/", name: "General" },
+    { path: "/business", name: "Business" },
+    { path: "/entertainment", name: "Entertainment" },
+    { path: "/health", name: "Health" },
+    { path: "/science", name: "Science" },
+    { path: "/sports", name: "Sports" },
+    { path: "/technology", name: "Technology" },
+  ];
   return (
     <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium"
-      >
-        <Link
-          to="/"
-          className="flex text-lg items-center hover:text-blue-500 transition-colors"
+      {categories.map((category) => (
+        <Typography
+          key={category.name}
+          as="li"
+          variant="small"
+          color="blue-gray"
+          className="p-1 font-medium"
         >
-          General
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium"
-      >
-        <Link
-          to="/business"
-          className="flex text-lg items-center hover:text-blue-500 transition-colors"
-        >
-          Business
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium"
-      >
-        <Link
-          to="/entertainment"
-          className="flex text-lg items-center hover:text-blue-500 transition-colors"
-        >
-          Entertainent
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium"
-      >
-        <Link
-          to="/health"
-          className="flex text-lg items-center hover:text-blue-500 transition-colors"
-        >
-          Health
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium"
-      >
-        <Link
-          to="/science"
-          className="flex text-lg items-center hover:text-blue-500 transition-colors"
-        >
-          Science
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium"
-      >
-        <Link
-          to="/sports"
-          className="flex text-lg items-center hover:text-blue-500 transition-colors"
-        >
-          Sports
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium"
-      >
-        <Link
-          to="/technology"
-          className="flex text-lg items-center hover:text-blue-500 transition-colors"
-        >
-          Technology
-        </Link>
-      </Typography>
+          <Link
+            to={category.path}
+            className="flex text-lg items-center hover:text-blue-500 transition-colors"
+            onClick={() => setOpenNav(false)}
+          >
+            {category.name}
+          </Link>
+        </Typography>
+      ))}
     </ul>
   );
 }

@@ -13,7 +13,7 @@ function App() {
     <BrowserRouter>
       <div className="py-3">
         <SimpleNavbar />
-        
+
         <Routes>
           <Route
             key="general"
@@ -26,7 +26,6 @@ function App() {
             element={<News category={"business"} />}
           />
           <Route
-            key="entertainment"
             path="/entertainment"
             element={<News category={"entertainment"} />}
           />
