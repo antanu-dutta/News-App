@@ -5,27 +5,29 @@ import { DefaultSpinner } from "./Spiner";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Spinner } from "@material-tailwind/react";
 
-function News({ category, mainCategory }) {
+function News({ category, setProgressBar }) {
   const [newsDetails, setNewsDetails] = useState({
     isLoading: true,
     totalNews: 0,
     articles: [],
-    page: 1,
     errorMessage: "",
   });
 
   const fetchMoreData = async () => {
     try {
-      const url = `https://newsapi.org/v2/${mainCategory}?country=in&category=${category}&apiKey=8936d237be2e4a8fb24a5e85fff941fa&pageSize=12`;
+      setProgressBar(40);
+      const url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=8936d237be2e4a8fb24a5e85fff941fa&pageSize=12`;
+      setProgressBar(70);
       const newsData = await axios(url);
+
       setNewsDetails((prevState) => ({
         ...prevState,
         articles: [...newsData.data.articles, ...prevState.articles],
         // articles: newsData.data.articles,
         totalNews: newsData.data.totalResults,
         isLoading: false,
-        page: prevState.page + 1,
       }));
+      setProgressBar(100);
     } catch (err) {
       if (err.response && err.response.status === 429) {
         setNewsDetails((prevState) => ({
@@ -44,11 +46,11 @@ function News({ category, mainCategory }) {
   return (
     <div>
       <div className="max-w-screen-xl mx-auto p-3 py-[100px]">
-        {newsDetails.isLoading && (
+        {/* {newsDetails.isLoading && (
           <div className="flex justify-center items-center my-5">
             <DefaultSpinner />
           </div>
-        )}
+        )} */}
 
         {newsDetails.errorMessage && (
           <div className="text-center text-red-600 text-4xl">
@@ -102,7 +104,3 @@ function News({ category, mainCategory }) {
 }
 
 export default News;
-
-News.defaultProps = {
-  mainCategory: "top-headlines",
-};

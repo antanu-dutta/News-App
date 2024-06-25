@@ -9,7 +9,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AlgoliaSearch } from "./Search";
 import { Link } from "react-router-dom";
 
-function NavList({ setOpenNav, openNav }) {
+function NavList() {
   const categories = [
     { path: "/", name: "General" },
     { path: "/business", name: "Business" },
@@ -32,7 +32,7 @@ function NavList({ setOpenNav, openNav }) {
           <Link
             to={category.path}
             className="flex text-lg items-center hover:text-blue-500 transition-colors"
-            onClick={() => setOpenNav(false)}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             {category.name}
           </Link>
@@ -72,7 +72,7 @@ export function SimpleNavbar() {
           </Link>
 
           <div className="hidden lg:block">
-            <NavList setOpenNav={setOpenNav} openNav={openNav} />
+            <NavList />
           </div>
           <div className="hidden lg:block">
             <AlgoliaSearch />
